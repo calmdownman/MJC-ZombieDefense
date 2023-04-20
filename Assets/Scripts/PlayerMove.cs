@@ -74,6 +74,15 @@ public class PlayerMove : MonoBehaviour
 
         hpSlider.value = (float)hp/(float)maxHP;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer != LayerMask.NameToLayer("EnemyBullet")) return;
+
+        DamageAction(other.gameObject.GetComponent<Missile>().damage);
+        Destroy(other.gameObject);
+    }
+
     public void DamageAction(int damage)
     {
         hp -= damage; //에너미의 공격력 만큼 플레이어 체력을 감소
