@@ -64,6 +64,8 @@ public class GameManager : MonoBehaviour
             Transform buttons = gameText.transform.GetChild(0);
             //버튼 오브젝트를 활성화
             buttons.gameObject.SetActive(true);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             gState = GameState.GameOver;
         }
     }
