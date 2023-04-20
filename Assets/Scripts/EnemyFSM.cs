@@ -6,6 +6,8 @@ using UnityEngine.AI;
 
 public class EnemyFSM : MonoBehaviour
 {
+    public enum Type {A,B,C};
+    public Type enemyType;
     enum EnemyState
     {
         Idle,
@@ -19,8 +21,8 @@ public class EnemyFSM : MonoBehaviour
 
     public float findDistance = 8f; //플레이어 발견 범위
     Transform player; //플레이어 트랜스폼
-    public float attackDistance = 2f;
-    public float moveSpeed = 5f;
+    public float attackDistance = 2f; //공격 범위
+    //public float moveSpeed = 5f;
     CharacterController cc; //캐릭터 컨트롤러 컴포넌트
 
     float currentTime = 0; //공격 누적 시간
@@ -30,7 +32,9 @@ public class EnemyFSM : MonoBehaviour
     Vector3 originPos; //에너미의 초기위치
     Quaternion oringRot; //에너미의 초기회전
     public float moveDistance = 20f; //이동 가능 범위
+    [SerializeField]
     int hp = 15; //좀비의 현재 체력
+    [SerializeField]
     int maxHp = 15; //좀비의 최대 체력
     public Slider hpSlider;
 
@@ -167,7 +171,6 @@ public class EnemyFSM : MonoBehaviour
 
         smith.isStopped= true;
         smith.ResetPath();
-
 
         if (hp > 0) //총에 맞았을 때 좀비 체력이 0보다 크면
         {
