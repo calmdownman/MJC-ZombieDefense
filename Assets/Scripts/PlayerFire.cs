@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +29,8 @@ public class PlayerFire : MonoBehaviour
 
     private float lastAttackTime = 0; //마지막 발사시간 체크용
 
+    private CameraRecoil recoil_Script;
+
     enum WeaponMode
     {
         Normal,
@@ -43,6 +45,8 @@ public class PlayerFire : MonoBehaviour
         ps = bulletEffect.GetComponent<ParticleSystem>();
         anim = GetComponentInChildren<Animator>();
         audioSource = GetComponent<AudioSource>();
+
+        //recoil_Script = Camera.main.transform.GetComponent<CameraRecoil>();
     }
 
     // Update is called once per frame
@@ -202,6 +206,8 @@ public class PlayerFire : MonoBehaviour
             anim.Play("Fire", -1, 0);
             //공격 사운드 재생
             audioSource.Play();
+
+            //recoil_Script.RecoilFire();
         }
     }
 
