@@ -6,15 +6,25 @@ using UnityEngine.UI;
 public class PlayerFire : MonoBehaviour
 {
     public Text wModeText;
+
+    [Header("Bomb")]
     public GameObject firePosition; //발사 위치
     public GameObject bombFactory; //투척 무기 오브젝트
     public float throwPower = 15f;
+    public int rotatePower = 10;
 
     public GameObject bulletEffect; //피격 이펙트 오브젝트
     ParticleSystem ps; //피격 이펙트 파티클 시스템
     public int weaponPower = 5;
+
     Animator anim;
     public GameObject[] eff_Flash; //총 발사 효과 오브젝트 배열
+
+    [Header("Weapon Setting")]
+    [SerializeField]
+    private WeaponSetting weaponSetting;
+
+    private float lastAttackTime = 0;
 
     enum WeaponMode
     {
@@ -38,7 +48,7 @@ public class PlayerFire : MonoBehaviour
             return;
         }
 
-        if (Input.GetMouseButtonDown(1)) 
+        if (Input.GetMouseButtonDown(1))
         {
             switch (wMode)
             {
@@ -51,26 +61,27 @@ public class PlayerFire : MonoBehaviour
                     Rigidbody rb = bomb.GetComponent<Rigidbody>();
                     //AddForce를 이용해 수류탄 이동
                     rb.AddForce(Camera.main.transform.forward * throwPower, ForceMode.Impulse);
-                    break; 
-                
+                    rb.AddTorque(Vector3.back * rotatePower, ForceMode.Impulse); //수류탄 던져질 때 회전
+                    break;
+
                 case WeaponMode.Sniper:
-                    if(!ZoomMode)
+                    if (!ZoomMode)
                     {
                         Camera.main.fieldOfView = 15f;
                         ZoomMode = true;
-                    } 
+                    }
                     else //줌 모드라면 카메라 확대를 원래 상태로
                     {
                         Camera.main.fieldOfView = 60f;
                         ZoomMode = false;
                     }
                     break;
-            }    
+            }
         }
 
-        if(Input.GetMouseButtonDown(0)) 
-        { 
-            if(anim.GetFloat("MoveMotion")==0) 
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (anim.GetFloat("MoveMotion") == 0)
             {
                 anim.SetTrigger("Attack");
             }
@@ -78,14 +89,14 @@ public class PlayerFire : MonoBehaviour
             Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
             RaycastHit hitInfo = new RaycastHit(); //레이와 부딪힌 상대방의 정보를 저장할 구조체
 
-            if(Physics.Raycast(ray, out hitInfo))
+            if (Physics.Raycast(ray, out hitInfo))
             {
                 //레이가 부딪히 오브젝트가 Enemy라면
-                if(hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy")) 
+                if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
                     EnemyFSM eFSM = hitInfo.transform.GetComponent<EnemyFSM>();
                     eFSM.HitEnemy(weaponPower);
-                } 
+                }
                 else
                 {
                     //피격 이펙트의 위치를 레이와 부딪힌 지점으로 이동
@@ -104,12 +115,24 @@ public class PlayerFire : MonoBehaviour
             Camera.main.fieldOfView = 60f;
             wModeText.text = "Normal Mode";
         }
-        else if(Input.GetKeyDown(KeyCode.Alpha2)) 
-        { 
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
             wMode = WeaponMode.Sniper;
             wModeText.text = "Sniper Mode";
         }
     }
+
+    public void StartWeaponAction(int type = 0) {
+        if (type == 0)
+        {
+            //연속 공격
+            if(weaponSetting.isAutomaticAttack==true)
+            {
+                
+            }
+        }
+    }
+
 
     IEnumerator ShootEffectOn(float duration)
     {
