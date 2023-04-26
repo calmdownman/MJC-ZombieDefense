@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
         Ready,
         Run,
         Pause,
-        GameOver
+        GameOver,
     }
 
     public GameState gState; //게임 상태 상수

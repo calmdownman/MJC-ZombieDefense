@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PlayerFire : MonoBehaviour
 {
     public Text wModeText;
+    private AudioSource audioSource; //사운드 재생 제어
 
     [Header("Bomb")]
     public GameObject firePosition; //발사 위치
@@ -22,14 +23,17 @@ public class PlayerFire : MonoBehaviour
 
     [Header("Weapon Setting")]
     [SerializeField]
-    private WeaponSetting weaponSetting;
+    private WeaponSetting weaponSetting; //무기 설정
+    [SerializeField]
+    private AudioClip audioClipFire;
 
-    private float lastAttackTime = 0;
+    private float lastAttackTime = 0; //마지막 발사시간 체크용
 
     enum WeaponMode
     {
         Normal,
-        Sniper
+        Sniper,
+        Rifle
     }
     WeaponMode wMode;
     bool ZoomMode = false; //카메라 확대 확인용 변수
@@ -38,6 +42,7 @@ public class PlayerFire : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         ps = bulletEffect.GetComponent<ParticleSystem>();
         anim = GetComponentInChildren<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -48,10 +53,13 @@ public class PlayerFire : MonoBehaviour
             return;
         }
 
+        UpdateWeaponAction();
+
         if (Input.GetMouseButtonDown(1))
         {
             switch (wMode)
             {
+                case WeaponMode.Rifle:
                 case WeaponMode.Normal:
                     //수류탄을 생성한 후 수류탄 생성 위치를 firePosition으로 한다
                     GameObject bomb = Instantiate(bombFactory);
@@ -79,12 +87,92 @@ public class PlayerFire : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            weaponSetting.isAutomaticAttack = false;
+            wMode = WeaponMode.Normal;
+            Camera.main.fieldOfView = 60f;
+            wModeText.text = "Normal Mode";
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            weaponSetting.isAutomaticAttack = false;
+            wMode = WeaponMode.Sniper;
+            wModeText.text = "Sniper Mode";
+        }
+        else if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            wMode = WeaponMode.Rifle;
+            wModeText.text = "Rifle Mode";
+            weaponSetting.isAutomaticAttack = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+           anim.SetTrigger("Reload");
+        }
+
+        
+
+    }
+
+    private void UpdateWeaponAction()
+    {
         if (Input.GetMouseButtonDown(0))
         {
-            if (anim.GetFloat("MoveMotion") == 0)
+            StartWeaponAction();
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            StopWeaponAction();
+        }
+    }
+
+        public void StartWeaponAction(int type = 0) {
+        if (type == 0)
+        {
+            //연속 공격
+            if(weaponSetting.isAutomaticAttack == true)
             {
-                anim.SetTrigger("Attack");
+                StartCoroutine("OnAttackLoop");
+            } 
+            //단발 공격
+            else
+            {
+                OnAttack();
             }
+        }
+    }
+
+    public void StopWeaponAction(int type = 0)
+    {
+        if (type == 0)
+        {
+            //마우스 왼쪽 클릭 (공격 종료)
+            if (weaponSetting.isAutomaticAttack == true)
+            {
+                StopCoroutine("OnAttackLoop");
+            }
+        }
+    }
+
+    IEnumerator OnAttackLoop()
+    {
+        while (true)
+        {
+            OnAttack();
+            yield return null;
+        }
+    }
+
+    private void OnAttack() {
+        if (Time.time - lastAttackTime > weaponSetting.attackRate) { 
+            //뛰고있을 때는 공격할 수 없다
+            if(anim.GetFloat("MoveMotion") > 0)
+            {
+                return;
+            }
+
             //레이를 생성한 후 발사될 위치와 진행 방향을 설정
             Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
             RaycastHit hitInfo = new RaycastHit(); //레이와 부딪힌 상대방의 정보를 저장할 구조체
@@ -107,32 +195,15 @@ public class PlayerFire : MonoBehaviour
                 }
             }
             StartCoroutine(ShootEffectOn(0.05f)); //총 이펙트 실시
-        }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            wMode = WeaponMode.Normal;
-            Camera.main.fieldOfView = 60f;
-            wModeText.text = "Normal Mode";
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            wMode = WeaponMode.Sniper;
-            wModeText.text = "Sniper Mode";
+            //공격주기가 되어야 공격할 수 있도록 하기 위해 현재 시간 저장
+            lastAttackTime = Time.time;
+            //무기 애니메이션 재생
+            anim.Play("Fire", -1, 0);
+            //공격 사운드 재생
+            audioSource.Play();
         }
     }
-
-    public void StartWeaponAction(int type = 0) {
-        if (type == 0)
-        {
-            //연속 공격
-            if(weaponSetting.isAutomaticAttack==true)
-            {
-                
-            }
-        }
-    }
-
 
     IEnumerator ShootEffectOn(float duration)
     {
