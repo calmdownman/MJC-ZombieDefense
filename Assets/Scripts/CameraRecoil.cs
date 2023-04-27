@@ -15,11 +15,6 @@ public class CameraRecoil : MonoBehaviour
     [SerializeField] private float snappiness;
     [SerializeField] private float returnSpeed;
 
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {

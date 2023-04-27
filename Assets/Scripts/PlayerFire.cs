@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,28 +6,28 @@ using UnityEngine.UI;
 public class PlayerFire : MonoBehaviour
 {
     public Text wModeText;
-    private AudioSource audioSource; //»ç¿îµå Àç»ı Á¦¾î
+    private AudioSource audioSource; //Fire Postion ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     [Header("Bomb")]
-    public GameObject firePosition; //¹ß»ç À§Ä¡
-    public GameObject bombFactory; //ÅõÃ´ ¹«±â ¿ÀºêÁ§Æ®
+    public GameObject firePosition; //ï¿½ß»ï¿½ ï¿½ï¿½Ä¡
+    public GameObject bombFactory; //ï¿½ï¿½Ã´ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     public float throwPower = 15f;
     public int rotatePower = 10;
 
-    public GameObject bulletEffect; //ÇÇ°İ ÀÌÆåÆ® ¿ÀºêÁ§Æ®
-    ParticleSystem ps; //ÇÇ°İ ÀÌÆåÆ® ÆÄÆ¼Å¬ ½Ã½ºÅÛ
+    public GameObject bulletEffect; //ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+    ParticleSystem ps; //ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Æ¼Å¬ ï¿½Ã½ï¿½ï¿½ï¿½
     public int weaponPower = 5;
 
     Animator anim;
-    public GameObject[] eff_Flash; //ÃÑ ¹ß»ç È¿°ú ¿ÀºêÁ§Æ® ¹è¿­
+    public GameObject[] eff_Flash; //ï¿½ï¿½ ï¿½ß»ï¿½ È¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½è¿­
 
     [Header("Weapon Setting")]
     [SerializeField]
-    private WeaponSetting weaponSetting; //¹«±â ¼³Á¤
+    private WeaponSetting weaponSetting; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [SerializeField]
-    private AudioClip audioClipFire;
+    private AudioClip audioClipFire; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    private float lastAttackTime = 0; //¸¶Áö¸· ¹ß»ç½Ã°£ Ã¼Å©¿ë
+    private float lastAttackTime = 0; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½Ã°ï¿½ Ã¼Å©ï¿½ï¿½
 
     private CamRotate recoil_Script;
 
@@ -38,13 +38,13 @@ public class PlayerFire : MonoBehaviour
         Rifle
     }
     WeaponMode wMode;
-    bool ZoomMode = false; //Ä«¸Ş¶ó È®´ë È®ÀÎ¿ë º¯¼ö
+    bool ZoomMode = false; //Ä«ï¿½Ş¶ï¿½ È®ï¿½ï¿½ È®ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         ps = bulletEffect.GetComponent<ParticleSystem>();
         anim = GetComponentInChildren<Animator>();
-        audioSource = GetComponent<AudioSource>();
+        audioSource = transform.Find("FirePosition").GetComponent<AudioSource>();
 
         recoil_Script = Camera.main.transform.GetComponent<CamRotate>();
     }
@@ -65,15 +65,15 @@ public class PlayerFire : MonoBehaviour
             {
                 case WeaponMode.Rifle:
                 case WeaponMode.Normal:
-                    //¼ö·ùÅºÀ» »ı¼ºÇÑ ÈÄ ¼ö·ùÅº »ı¼º À§Ä¡¸¦ firePositionÀ¸·Î ÇÑ´Ù
+                    //ï¿½ï¿½ï¿½ï¿½Åºï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Åº ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ firePositionï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½
                     GameObject bomb = Instantiate(bombFactory);
                     bomb.transform.position = firePosition.transform.position;
 
-                    //¼ö·ùÅº ¿ÀºêÁ§Æ®ÀÇ ¸®Áöµå¹Ùµğ Á¤º¸¸¦ ¾ò¾î¿È
+                    //ï¿½ï¿½ï¿½ï¿½Åº ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ùµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                     Rigidbody rb = bomb.GetComponent<Rigidbody>();
-                    //AddForce¸¦ ÀÌ¿ëÇØ ¼ö·ùÅº ÀÌµ¿
+                    //AddForceï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Åº ï¿½Ìµï¿½
                     rb.AddForce(Camera.main.transform.forward * throwPower, ForceMode.Impulse);
-                    rb.AddTorque(Vector3.back * rotatePower, ForceMode.Impulse); //¼ö·ùÅº ´øÁ®Áú ¶§ È¸Àü
+                    rb.AddTorque(Vector3.back * rotatePower, ForceMode.Impulse); //ï¿½ï¿½ï¿½ï¿½Åº ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È¸ï¿½ï¿½
                     break;
 
                 case WeaponMode.Sniper:
@@ -82,7 +82,7 @@ public class PlayerFire : MonoBehaviour
                         Camera.main.fieldOfView = 15f;
                         ZoomMode = true;
                     }
-                    else //ÁÜ ¸ğµå¶ó¸é Ä«¸Ş¶ó È®´ë¸¦ ¿ø·¡ »óÅÂ·Î
+                    else //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½Ş¶ï¿½ È®ï¿½ë¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½
                     {
                         Camera.main.fieldOfView = 60f;
                         ZoomMode = false;
@@ -115,9 +115,6 @@ public class PlayerFire : MonoBehaviour
         {
            anim.SetTrigger("Reload");
         }
-
-        
-
     }
 
     private void UpdateWeaponAction()
@@ -135,12 +132,12 @@ public class PlayerFire : MonoBehaviour
         public void StartWeaponAction(int type = 0) {
         if (type == 0)
         {
-            //¿¬¼Ó °ø°İ
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if(weaponSetting.isAutomaticAttack == true)
             {
                 StartCoroutine("OnAttackLoop");
             } 
-            //´Ü¹ß °ø°İ
+            //ï¿½Ü¹ï¿½ ï¿½ï¿½ï¿½ï¿½
             else
             {
                 OnAttack();
@@ -152,7 +149,7 @@ public class PlayerFire : MonoBehaviour
     {
         if (type == 0)
         {
-            //¸¶¿ì½º ¿ŞÂÊ Å¬¸¯ (°ø°İ Á¾·á)
+            //ï¿½ï¿½ï¿½ì½º ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             if (weaponSetting.isAutomaticAttack == true)
             {
                 StopCoroutine("OnAttackLoop");
@@ -171,19 +168,19 @@ public class PlayerFire : MonoBehaviour
 
     private void OnAttack() {
         if (Time.time - lastAttackTime > weaponSetting.attackRate) { 
-            //¶Ù°íÀÖÀ» ¶§´Â °ø°İÇÒ ¼ö ¾ø´Ù
+            //ï¿½Ù°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if(anim.GetFloat("MoveMotion") > 0)
             {
                 return;
             }
 
-            //·¹ÀÌ¸¦ »ı¼ºÇÑ ÈÄ ¹ß»çµÉ À§Ä¡¿Í ÁøÇà ¹æÇâÀ» ¼³Á¤
+            //ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-            RaycastHit hitInfo = new RaycastHit(); //·¹ÀÌ¿Í ºÎµúÈù »ó´ë¹æÀÇ Á¤º¸¸¦ ÀúÀåÇÒ ±¸Á¶Ã¼
+            RaycastHit hitInfo = new RaycastHit(); //ï¿½ï¿½ï¿½Ì¿ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¼
 
             if (Physics.Raycast(ray, out hitInfo))
             {
-                //·¹ÀÌ°¡ ºÎµúÈ÷ ¿ÀºêÁ§Æ®°¡ Enemy¶ó¸é
+                //ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ Enemyï¿½ï¿½ï¿½
                 if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
                     EnemyFSM eFSM = hitInfo.transform.GetComponent<EnemyFSM>();
@@ -191,23 +188,23 @@ public class PlayerFire : MonoBehaviour
                 }
                 else
                 {
-                    //ÇÇ°İ ÀÌÆåÆ®ÀÇ À§Ä¡¸¦ ·¹ÀÌ¿Í ºÎµúÈù ÁöÁ¡À¸·Î ÀÌµ¿
+                    //ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¿ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
                     bulletEffect.transform.position = hitInfo.point;
-                    //ÇÇ°İ ÀÌÆåÆ®ÀÇ forward ¹æÇâÀ» ·¹ÀÌ°¡ ºÎµúÈù ÁöÁ¡ÀÇ ¹ı¼± º¤ÅÍ¿Í ÀÏÄ¡½ÃÅ²´Ù
+                    //ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ forward ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½Å²ï¿½ï¿½
                     bulletEffect.transform.forward = hitInfo.normal;
-                    ps.Play(); //ÇÇ°İ ÀÌÆåÆ® ÇÃ·¹ÀÌ
+                    ps.Play(); //ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ã·ï¿½ï¿½ï¿½
                 }
             }
-            StartCoroutine(ShootEffectOn(0.05f)); //ÃÑ ÀÌÆåÆ® ½Ç½Ã
+            StartCoroutine(ShootEffectOn(0.05f)); //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ç½ï¿½
 
-            //°ø°İÁÖ±â°¡ µÇ¾î¾ß °ø°İÇÒ ¼ö ÀÖµµ·Ï ÇÏ±â À§ÇØ ÇöÀç ½Ã°£ ÀúÀå
+            //ï¿½ï¿½ï¿½ï¿½ï¿½Ö±â°¡ ï¿½Ç¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
             lastAttackTime = Time.time;
-            //¹«±â ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½
             anim.Play("Fire", -1, 0);
-            //°ø°İ »ç¿îµå Àç»ı
-            audioSource.Play();
-
-            //recoil_Script.RecoilFire();
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+            PlaySound(audioClipFire);
+            //ì—°ì‚¬ ì‹œ ì´ ë°˜ë™
+            if(wMode == WeaponMode.Rifle) recoil_Script.RecoilFire();
         }
     }
 
@@ -217,5 +214,12 @@ public class PlayerFire : MonoBehaviour
         eff_Flash[num].SetActive(true);
         yield return new WaitForSeconds(duration);
         eff_Flash[num].SetActive(false);
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        audioSource.Stop();
+        audioSource.clip = clip;
+        audioSource.Play();
     }
 }
