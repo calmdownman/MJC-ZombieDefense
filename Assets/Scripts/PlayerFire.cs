@@ -207,7 +207,7 @@ public class PlayerFire : MonoBehaviour
             //공격 사운드 재생
             audioSource.Play();
 
-            recoil_Script.RecoilFire();
+            //recoil_Script.RecoilFire();
         }
     }
 
