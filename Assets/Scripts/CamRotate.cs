@@ -6,7 +6,20 @@ public class CamRotate : MonoBehaviour
     public float rotSpeed = 200f; //회전 속도 변수
     // Start is called before the first frame update
     float mx = 0; //회전 값 변수
-    float my = 0; 
+    float my = 0;
+
+    //Rotations
+    private Vector3 currentRotation;
+    private Vector3 targetRotation;
+
+    //HipFire Recoil
+    [SerializeField] private float recoilX;
+    [SerializeField] private float recoilY;
+    [SerializeField] private float recoilZ;
+
+    //Settings
+    [SerializeField] private float snappiness;
+    [SerializeField] private float returnSpeed;
 
     // Update is called once per frame
     void Update()
@@ -39,5 +52,10 @@ public class CamRotate : MonoBehaviour
         rot.x = Mathf.Clamp(rot.x, -90f, 90f);
         transform.eulerAngles = rot;
         */
+    }
+
+    public void RecoilFire()
+    {
+        transform.eulerAngles += new Vector3(-3,0,0);
     }
 }
