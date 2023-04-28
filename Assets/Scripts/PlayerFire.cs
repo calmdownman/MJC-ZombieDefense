@@ -6,29 +6,29 @@ using UnityEngine.UI;
 public class PlayerFire : MonoBehaviour
 {
     public Text wModeText;
-    private AudioSource audioSource; //Fire Postion ���� ��� ����
+    private AudioSource audioSource; //Fire Postion 
 
     [Header("Bomb")]
-    public GameObject firePosition; //�߻� ��ġ
-    public GameObject bombFactory; //��ô ���� ������Ʈ
+    public GameObject firePosition; 
+    public GameObject bombFactory; 
     public float throwPower = 15f;
     public int rotatePower = 10;
 
-    public GameObject bulletEffect; //�ǰ� ����Ʈ ������Ʈ
-    ParticleSystem ps; //�ǰ� ����Ʈ ��ƼŬ �ý���
+    public GameObject bulletEffect;
+    public GameObject booldEffect;
+    ParticleSystem ps,bs; 
     public int weaponPower = 5;
 
     Animator anim;
-    public GameObject[] eff_Flash; //�� �߻� ȿ�� ������Ʈ �迭
+    public GameObject[] eff_Flash;
 
     [Header("Weapon Setting")]
     [SerializeField]
-    private WeaponSetting weaponSetting; //���� ����
+    private WeaponSetting weaponSetting; 
     [SerializeField]
-    private AudioClip audioClipFire; //���� ����
+    private AudioClip audioClipFire; 
 
-    private float lastAttackTime = 0; //������ �߻�ð� üũ��
-
+    private float lastAttackTime = 0; 
     private CamRotate recoil_Script;
 
     enum WeaponMode
@@ -38,11 +38,12 @@ public class PlayerFire : MonoBehaviour
         Rifle
     }
     WeaponMode wMode;
-    bool ZoomMode = false; //ī�޶� Ȯ�� Ȯ�ο� ����
+    bool ZoomMode = false; 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         ps = bulletEffect.GetComponent<ParticleSystem>();
+        bs = booldEffect.GetComponent<ParticleSystem>();
         anim = GetComponentInChildren<Animator>();
         audioSource = transform.Find("FirePosition").GetComponent<AudioSource>();
 
@@ -65,15 +66,13 @@ public class PlayerFire : MonoBehaviour
             {
                 case WeaponMode.Rifle:
                 case WeaponMode.Normal:
-                    //����ź�� ������ �� ����ź ���� ��ġ�� firePosition���� �Ѵ�
                     GameObject bomb = Instantiate(bombFactory);
                     bomb.transform.position = firePosition.transform.position;
 
-                    //����ź ������Ʈ�� ������ٵ� ������ ����
                     Rigidbody rb = bomb.GetComponent<Rigidbody>();
-                    //AddForce�� �̿��� ����ź �̵�
+
                     rb.AddForce(Camera.main.transform.forward * throwPower, ForceMode.Impulse);
-                    rb.AddTorque(Vector3.back * rotatePower, ForceMode.Impulse); //����ź ������ �� ȸ��
+                    rb.AddTorque(Vector3.back * rotatePower, ForceMode.Impulse); 
                     break;
 
                 case WeaponMode.Sniper:
@@ -143,12 +142,12 @@ public class PlayerFire : MonoBehaviour
         public void StartWeaponAction(int type = 0) {
         if (type == 0)
         {
-            //���� ����
+       
             if(weaponSetting.isAutomaticAttack == true)
             {
                 StartCoroutine("OnAttackLoop");
             } 
-            //�ܹ� ����
+          
             else
             {
                 OnAttack();
@@ -160,7 +159,6 @@ public class PlayerFire : MonoBehaviour
     {
         if (type == 0)
         {
-            //���콺 ���� Ŭ�� (���� ����)
             if (weaponSetting.isAutomaticAttack == true)
             {
                 StopCoroutine("OnAttackLoop");
@@ -179,40 +177,37 @@ public class PlayerFire : MonoBehaviour
 
     private void OnAttack() {
         if (Time.time - lastAttackTime > weaponSetting.attackRate) { 
-            //�ٰ����� ���� ������ �� ����
+
             if(anim.GetFloat("MoveMotion") > 0)
             {
                 return;
             }
 
-            //���̸� ������ �� �߻�� ��ġ�� ���� ������ ����
+         
             Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-            RaycastHit hitInfo = new RaycastHit(); //���̿� �ε��� ������ ������ ������ ����ü
+            RaycastHit hitInfo = new RaycastHit(); 
 
             if (Physics.Raycast(ray, out hitInfo))
             {
-                //���̰� �ε��� ������Ʈ�� Enemy���
                 if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
                     EnemyFSM eFSM = hitInfo.transform.GetComponent<EnemyFSM>();
+                    booldEffect.transform.position = hitInfo.point;
+                    booldEffect.transform.forward = hitInfo.normal;
+                    bs.Play();
                     eFSM.HitEnemy(weaponPower);
                 }
                 else
                 {
-                    //�ǰ� ����Ʈ�� ��ġ�� ���̿� �ε��� �������� �̵�
                     bulletEffect.transform.position = hitInfo.point;
-                    //�ǰ� ����Ʈ�� forward ������ ���̰� �ε��� ������ ���� ���Ϳ� ��ġ��Ų��
                     bulletEffect.transform.forward = hitInfo.normal;
-                    ps.Play(); //�ǰ� ����Ʈ �÷���
+                    ps.Play(); 
                 }
             }
-            StartCoroutine(ShootEffectOn(0.05f)); //�� ����Ʈ �ǽ�
+            StartCoroutine(ShootEffectOn(0.05f)); 
 
-            //�����ֱⰡ �Ǿ�� ������ �� �ֵ��� �ϱ� ���� ���� �ð� ����
             lastAttackTime = Time.time;
-            //���� �ִϸ��̼� ���
             anim.Play("Fire", -1, 0);
-            //���� ���� ���
             PlaySound(audioClipFire);
             //연사 시 총 반동
             if(wMode == WeaponMode.Rifle) recoil_Script.RecoilFire();

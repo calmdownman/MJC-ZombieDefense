@@ -134,8 +134,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c53e3389c1c7f2346a7a37e9f47d2f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitEffect: {fileID: 198000011254678926, guid: da33d2f1d5c4b41689d8063e19e3a7dc, type: 3}
   enemyType: 0
-  findDistance: 8
+  findDistance: 20
   attackDistance: 2
   attackPower: 3
   moveDistance: 20

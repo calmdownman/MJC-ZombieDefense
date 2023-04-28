@@ -54,6 +54,14 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            OpenOptionWindow();
+        }
+
+
         if(player.hp <= 0) //플레이어가 죽었다면
         {
             //이동->대기 애니메이션 실행
@@ -81,6 +89,8 @@ public class GameManager : MonoBehaviour
     public void CloseOptionWindow() //계속하기 옵션
     {
         gameOption.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1f;
         gState = GameState.Run;
     }

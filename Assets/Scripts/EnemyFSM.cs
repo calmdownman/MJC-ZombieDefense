@@ -163,9 +163,8 @@ public class EnemyFSM : MonoBehaviour
     public void HitEnemy(int hitPower) //좀비가 맞았을 때 호출되는 함수
     {
         //피격, 사망, 복귀 상태라면 아무런 처리를 하지 않는다
-        if(m_State== EnemyState.Damaged || m_State == EnemyState.Die || 
-           m_State == EnemyState.Return) {return;}
-          
+        if( m_State == EnemyState.Die || 
+           m_State == EnemyState.Return) {return;}    
 
         hp -= hitPower;
 
