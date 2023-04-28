@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     public PlayerMove player;
     public GameObject gameLabel; //게임 상태 UI 오브젝트 변수
+    public GameObject scopeObject;
     Text gameText; //게임 상태 UI텍스트 컴포넌트 변수
 
     public enum GameState

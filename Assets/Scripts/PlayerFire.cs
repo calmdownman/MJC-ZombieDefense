@@ -79,11 +79,22 @@ public class PlayerFire : MonoBehaviour
                 case WeaponMode.Sniper:
                     if (!ZoomMode)
                     {
+                        GameManager.Instance.scopeObject.SetActive(true);
                         Camera.main.fieldOfView = 15f;
                         ZoomMode = true;
                     }
-                    else //�� ����� ī�޶� Ȯ�븦 ���� ���·�
+                    break;
+            }
+        }
+
+        if (Input.GetMouseButtonUp(1)) 
+        {
+            switch (wMode)
+            {
+                case WeaponMode.Sniper:
+                    if (ZoomMode) 
                     {
+                        GameManager.Instance.scopeObject.SetActive(false);
                         Camera.main.fieldOfView = 60f;
                         ZoomMode = false;
                     }
