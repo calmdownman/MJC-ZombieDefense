@@ -11,16 +11,19 @@ public class GameManager : MonoBehaviour
     [Header("#Game Control")]
     public float gameTime;
     public float maxGameTime = 20f;
+    public Spawner spawner;
 
     [Header("#Player Info")]
     public int level;
     public int kill;
     public int exp;
-    public int[] nextExp = {3, 5, 8};
+    public int bombEA;
+    public int[] nextExp = {2, 3, 5, 7, 8, 8 ,8 ,8};
 
     public PlayerMove player;
     public GameObject gameLabel; //게임 상태 UI 오브젝트 변수
     public GameObject scopeObject;
+    public LevelUp uiLevelUp;
     Text gameText; //게임 상태 UI텍스트 컴포넌트 변수
 
     public enum GameState
@@ -49,6 +52,13 @@ public class GameManager : MonoBehaviour
         gameText.text = gState.ToString();
         gameText.color = new Color32(255,185,0,255);
         StartCoroutine(ReadyToStart());
+
+        int[] indexs = RandomNumerics(spawner.spawnPoints.Length-1, nextExp[level]);
+
+        for (int i = 0; i < nextExp[level]; i++)
+        {
+            spawner.Spawn(indexs[i]);
+        }
     }
 
     IEnumerator ReadyToStart() 
@@ -75,13 +85,12 @@ public class GameManager : MonoBehaviour
             if (gameTime > maxGameTime)
             {
                 gameTime = maxGameTime;
+                GameVictory();
             }
         }
 
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
             OpenOptionWindow();
         }
 
@@ -112,12 +121,50 @@ public class GameManager : MonoBehaviour
         {
             level++;
             exp = 0;
+            uiLevelUp.Show();
+            
+            int[] indexs = RandomNumerics(spawner.spawnPoints.Length - 1, nextExp[level]);
+
+            for (int i = 0; i < nextExp[level]; i++)
+            {
+                spawner.Spawn(indexs[i]);
+            }
         }
     }
+    public void OpenLevelUpWindow() //레벨업 화면 켜기
+    {
+        uiLevelUp.gameObject.SetActive(true);
+        CursorSolve();
+        Time.timeScale = 0;
+        gState = GameState.Pause;
+    }
 
+    public void CloseLevelUpWindow() //레벨업 화면 끄기
+    {
+        uiLevelUp.gameObject.SetActive(false);
+        CursorLock();
+        Time.timeScale = 1f;
+        gState = GameState.Run;
+    }
+
+    public void GameVictory()
+    {
+        //이동->대기 애니메이션 실행
+        player.GetComponentInChildren<Animator>().SetFloat("MoveMotion", 0f);
+        gameLabel.SetActive(true); //상태 텍스트 활성화
+        gameText.text = "Game Victory"; //상태 텍스트를 Game Victory로
+        gameText.color = new Color32(255, 255,100,255); //초록색으로                                            
+        Transform buttons = gameText.transform.GetChild(0);//상태 텍스트의 자식 오브젝트의 트랜스폼 정보를 얻어옴
+
+        buttons.gameObject.SetActive(true); //버튼 오브젝트를 활성화
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        gState = GameState.GameOver;
+    }
     public void OpenOptionWindow() //옵션 화면 켜기
     {
         gameOption.SetActive(true);
+        CursorSolve();
         Time.timeScale = 0;
         gState= GameState.Pause;
     }
@@ -125,8 +172,7 @@ public class GameManager : MonoBehaviour
     public void CloseOptionWindow() //계속하기 옵션
     {
         gameOption.SetActive(false);
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        CursorLock();
         Time.timeScale = 1f;
         gState = GameState.Run;
     }
@@ -140,5 +186,40 @@ public class GameManager : MonoBehaviour
     public void QuitGame() //게임 종료 옵션
     {
         Application.Quit();
+    }
+    void CursorLock()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    void CursorSolve()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public static int[] RandomNumerics(int maxCount, int n)
+    {
+        //0~maxCount까지의 숫자 중 겹치지 않는 n개의 난수가 필요할 때 사용
+        int[] defaults = new int[maxCount]; //0~maxCount까지 순서대로 저장하는 배열
+        int[] results = new int[n]; //결과 값들을 저장하는 배열
+
+        //배열 전체에 0부터 maxCount의 값을 순서대로 저장
+        for (int i = 0; i < maxCount; ++i)
+        {
+            defaults[i] = i;
+        }
+
+        for (int i = 0; i < n; ++i)
+        {
+            int index = Random.Range(0, maxCount); //임의의 숫자를 하나 뽑아서
+
+            results[i] = defaults[index];
+            defaults[index] = defaults[maxCount - 1];
+
+            maxCount--;
+        }
+        return results;
     }
 }

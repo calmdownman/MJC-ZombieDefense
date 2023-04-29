@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { Exp, Level, Kill, Time, Health } //enum 타입은 세미콜론 찍지 않음
+    public enum InfoType { Exp, Level, Kill, Time, Health, Bomb } //enum 타입은 세미콜론 찍지 않음
     public InfoType type;
 
     Text myText;
@@ -35,6 +35,9 @@ public class HUD : MonoBehaviour
                 int min = Mathf.FloorToInt(remainTime / 60);
                 int sec = Mathf.FloorToInt(remainTime % 60);
                 myText.text = string.Format("{0:D2}:{1:D2}", min, sec); //D0,1,2,3.. : 자리 수 지정
+                break;
+            case InfoType.Bomb:
+                myText.text = "X"+ GameManager.Instance.bombEA.ToString();
                 break;
         }
     }

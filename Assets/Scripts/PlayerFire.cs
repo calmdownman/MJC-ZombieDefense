@@ -66,13 +66,17 @@ public class PlayerFire : MonoBehaviour
             {
                 case WeaponMode.Rifle:
                 case WeaponMode.Normal:
+                    if(GameManager.Instance.bombEA > 0) 
+                    { 
                     GameObject bomb = Instantiate(bombFactory);
                     bomb.transform.position = firePosition.transform.position;
 
                     Rigidbody rb = bomb.GetComponent<Rigidbody>();
 
                     rb.AddForce(Camera.main.transform.forward * throwPower, ForceMode.Impulse);
-                    rb.AddTorque(Vector3.back * rotatePower, ForceMode.Impulse); 
+                    rb.AddTorque(Vector3.back * rotatePower, ForceMode.Impulse);
+                    GameManager.Instance.bombEA--;
+                    }
                     break;
 
                 case WeaponMode.Sniper:

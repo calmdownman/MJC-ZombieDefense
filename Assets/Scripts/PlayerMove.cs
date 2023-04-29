@@ -11,7 +11,7 @@ public class PlayerMove : MonoBehaviour
     public float jumpPower = 10f;
     public bool isJumping = false; //점프 상태변수
     public int hp = 20; //플레이어 체력 변수
-    int maxHP = 20; //플레이어의 최대 체력
+    public int maxHP = 20; //플레이어의 최대 체력
 
     [Header("Audio Clip")]
     [SerializeField]

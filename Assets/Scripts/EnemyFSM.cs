@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using System;
 
 public class EnemyFSM : MonoBehaviour
 {
+    public event Action onDeath; // 사망시 발동할 이벤트
     public enum Type {A,B,C};
     public Type enemyType;
     enum EnemyState
@@ -41,17 +43,16 @@ public class EnemyFSM : MonoBehaviour
     Animator anim;
     NavMeshAgent smith; //내비게이션 에이전트 변수
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        m_State= EnemyState.Idle;
+        m_State = EnemyState.Idle;
         player = GameObject.Find("Player").transform;
         cc = GetComponent<CharacterController>();
         originPos = transform.position;
         oringRot = transform.rotation;
         //자식 오브젝트의 애니터메이터 컴포넌트 받아오기
         anim = transform.GetComponentInChildren<Animator>();
-        smith= GetComponent<NavMeshAgent>();
+        smith = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -62,7 +63,7 @@ public class EnemyFSM : MonoBehaviour
             case EnemyState.Idle: Idle(); break;
             case EnemyState.Move: Move(); break;
             case EnemyState.Attack: Attack(); break;
-            case EnemyState.Return: Return(); break;
+            //case EnemyState.Return: Return(); break;
             //case EnemyState.Damaged: Damaged(); break;
             //case EnemyState.Die: Die(); break;
         }
@@ -80,13 +81,13 @@ public class EnemyFSM : MonoBehaviour
     }
     void Move()
     {
-         if (Vector3.Distance(transform.position, originPos) > moveDistance)
+        /* if (Vector3.Distance(transform.position, originPos) > moveDistance)
         {
             m_State = EnemyState.Return;
             print("상태 전환:Move -> Return");
         }
         //플레이어가 공격범위 밖이라면 플레이어를 향해 이동
-        else if (Vector3.Distance(transform.position, player.position) > attackDistance)
+        else*/ if (Vector3.Distance(transform.position, player.position) > attackDistance)
         {
            /* Vector3 dir = (player.position - transform.position).normalized; //이동 방향 설정
             cc.Move(dir * moveSpeed * Time.deltaTime); //이동
@@ -186,6 +187,11 @@ public class EnemyFSM : MonoBehaviour
             GameManager.Instance.kill++;
             GameManager.Instance.GetExp();
             Die();
+
+            if (onDeath != null)
+            {
+                onDeath();
+            }
         }
     }
 
