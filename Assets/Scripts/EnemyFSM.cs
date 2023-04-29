@@ -183,6 +183,8 @@ public class EnemyFSM : MonoBehaviour
             m_State = EnemyState.Die;
             print("상태 전환: Any State -> Die");
             anim.SetTrigger("Die");
+            GameManager.Instance.kill++;
+            GameManager.Instance.GetExp();
             Die();
         }
     }

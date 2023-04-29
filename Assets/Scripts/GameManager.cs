@@ -8,6 +8,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("#Game Control")]
+    public float gameTime;
+    public float maxGameTime = 20f;
+
+    [Header("#Player Info")]
+    public int level;
+    public int kill;
+    public int exp;
+    public int[] nextExp = {3, 5, 8};
+
     public PlayerMove player;
     public GameObject gameLabel; //게임 상태 UI 오브젝트 변수
     public GameObject scopeObject;
@@ -54,13 +64,26 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gState != GameState.Run)
+        {
+            return;
+        }
+        else
+        {
+            gameTime += Time.deltaTime;
+
+            if (gameTime > maxGameTime)
+            {
+                gameTime = maxGameTime;
+            }
+        }
+
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             OpenOptionWindow();
         }
-
 
         if(player.hp <= 0) //플레이어가 죽었다면
         {
@@ -76,6 +99,19 @@ public class GameManager : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             gState = GameState.GameOver;
+        }
+    }
+
+    public void GetExp()
+    {
+        if (gState != GameState.Run) return;
+
+        exp++;
+
+        if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)])
+        {
+            level++;
+            exp = 0;
         }
     }
 
