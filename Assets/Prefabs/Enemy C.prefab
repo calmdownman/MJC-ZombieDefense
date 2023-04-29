@@ -117,8 +117,8 @@ GameObject:
   - component: {fileID: 7837144986551261252}
   - component: {fileID: 7837144986551261253}
   - component: {fileID: 7837144986551261254}
-  - component: {fileID: 7837144986551261257}
   - component: {fileID: 7837144986551261250}
+  - component: {fileID: 7837144986551261257}
   m_Layer: 10
   m_Name: Enemy C
   m_TagString: Untagged
@@ -212,24 +212,6 @@ MonoBehaviour:
   hp: 30
   maxHp: 30
   hpSlider: {fileID: 7837144987962864619}
---- !u!143 &7837144986551261257
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7837144986551261251}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 1.8
-  m_Radius: 0.25
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: -0.1, z: 0}
 --- !u!195 &7837144986551261250
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -252,6 +234,24 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!143 &7837144986551261257
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7837144986551261251}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1.8
+  m_Radius: 0.25
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: -0.1, z: 0}
 --- !u!1 &7837144986786471869
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 691486109874090498}
   - component: {fileID: 691486109874090499}
   - component: {fileID: 691486109874090500}
-  - component: {fileID: 691486109874090501}
   - component: {fileID: 691486109874090502}
+  - component: {fileID: 691486109874090501}
   m_Layer: 10
   m_Name: Enemy B
   m_TagString: Untagged
@@ -98,7 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c53e3389c1c7f2346a7a37e9f47d2f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitEffect: {fileID: 198000011254678926, guid: da33d2f1d5c4b41689d8063e19e3a7dc, type: 3}
   enemyType: 1
   findDistance: 20
   attackDistance: 2.3
@@ -107,24 +106,6 @@ MonoBehaviour:
   hp: 10
   maxHp: 10
   hpSlider: {fileID: 691486111805365010}
---- !u!143 &691486109874090501
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 691486109874090503}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 1.8
-  m_Radius: 0.25
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: -0.1, z: 0}
 --- !u!195 &691486109874090502
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -147,6 +128,24 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!143 &691486109874090501
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 691486109874090503}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1.8
+  m_Radius: 0.25
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: -0.1, z: 0}
 --- !u!1 &691486109925868998
 GameObject:
   m_ObjectHideFlags: 0
